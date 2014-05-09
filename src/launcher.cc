@@ -22,9 +22,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-+#ifdef __APPLE__
- +  #include <libproc.h>
- +#endif
+#ifdef __APPLE__
+   #include <libproc.h>
+  #endif
 #include "launcher.h"
 // Inserting the changes made by Nathan Weeks in the most recent code
 
@@ -71,19 +71,19 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-// Determines the base dir of the shiny-server instance that's being invoked,
+// Determines the base dir of the shiny-server instance that's being invoked,'
 // by calling readlink on /proc/<pid>/exe.
 int findBaseDir(std::string* shinyServerPath) {
 
 
-+#ifdef __APPLE__
- +  char execPath[PROC_PIDPATHINFO_MAXSIZE];
- +  if (!proc_pidpath(getpid(), execPath, sizeof(execPath))) {
- +    perror("proc_pidpath");
- +    // unexpected error
- +    return 2;
- +  }
- +#else // assuming Linux
+ #ifdef __APPLE__
+   char execPath[PROC_PIDPATHINFO_MAXSIZE];
+   if (!proc_pidpath(getpid(), execPath, sizeof(execPath))) {
+     perror("proc_pidpath");
+     // unexpected error
+     return 2;
+   }
+ #else // assuming Linux
  
   char execPath[MAXPATHLEN + 1];
   int cn = snprintf(execPath, MAXPATHLEN + 1, "/proc/%d/exe", getpid());
@@ -121,7 +121,7 @@ int findBaseDir(std::string* shinyServerPath) {
   std::copy(execBuf.begin(), execBuf.begin() + cb, execPath);
   execPath[cb] = '\0';
 -
-+#endif
+ #endif
   *shinyServerPath = dirname(dirname(execPath));
 
   return 0;
