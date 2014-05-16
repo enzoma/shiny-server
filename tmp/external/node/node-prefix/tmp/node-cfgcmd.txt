@@ -1,0 +1,1 @@
+cmd='/Users/e/anaconda/bin/python;/Users/e/Documents/shiny-server/external/node/node-v0.10.21/configure;--prefix=/Users/e/Documents/shiny-server/ext/node'
